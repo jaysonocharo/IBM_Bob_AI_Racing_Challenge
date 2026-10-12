@@ -543,9 +543,9 @@ def drive_example(c):
 
     # Throttle Control
     if S['speedX'] < target_speed - (R['steer']*50):
-        R['accel']+= .04
+        R['accel']+= .01
     else:
-        R['accel']-= .04
+        R['accel']-= .01
     if S['speedX']<10:
        R['accel']+= 1/(S['speedX']+.1)
 
@@ -557,15 +557,22 @@ def drive_example(c):
     # Clamp accel to valid range
     R['accel'] = clip(R['accel'], 0, 1)
 
-    # Automatic Transmission - RPM based (prevents flickering)
-    gear = R['gear']
-    if gear < 1:
-        gear = 1
-    if S['rpm'] > 7500 and gear < 6:
-        gear += 1
-    elif S['rpm'] < 5000 and gear > 1:
-        gear -= 1
-    R['gear'] = gear
+    # Automatic Transmission - hysteresis (10 km/h dead band prevents flickering)
+    g = int(R['gear'])
+    g = max(1, min(6, g))  # clamp to valid range
+    # Upshift
+    if   g == 1 and S['speedX'] > 55:  g = 2
+    elif g == 2 and S['speedX'] > 85:  g = 3
+    elif g == 3 and S['speedX'] > 115: g = 4
+    elif g == 4 and S['speedX'] > 145: g = 5
+    elif g == 5 and S['speedX'] > 175: g = 6
+    # Downshift
+    elif g == 2 and S['speedX'] < 45:  g = 1
+    elif g == 3 and S['speedX'] < 75:  g = 2
+    elif g == 4 and S['speedX'] < 105: g = 3
+    elif g == 5 and S['speedX'] < 135: g = 4
+    elif g == 6 and S['speedX'] < 165: g = 5
+    R['gear'] = g
     return
 
 # ================ MAIN ================
