@@ -561,9 +561,9 @@ def drive_example(c):
     gear = R['gear']
     if gear < 1:
         gear = 1
-    if S['rpm'] > 8000 and gear < 6:
+    if S['rpm'] > 7500 and gear < 6:
         gear += 1
-    elif S['rpm'] < 3000 and gear > 1:
+    elif S['rpm'] < 5000 and gear > 1:
         gear -= 1
     R['gear'] = gear
     return
