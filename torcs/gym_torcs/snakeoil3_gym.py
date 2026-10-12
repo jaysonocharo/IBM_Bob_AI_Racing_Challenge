@@ -543,9 +543,9 @@ def drive_example(c):
 
     # Throttle Control
     if S['speedX'] < target_speed - (R['steer']*50):
-        R['accel']+= .1
+        R['accel']+= .04
     else:
-        R['accel']-= .1
+        R['accel']-= .04
     if S['speedX']<10:
        R['accel']+= 1/(S['speedX']+.1)
 
@@ -553,6 +553,9 @@ def drive_example(c):
     if ((S['wheelSpinVel'][2]+S['wheelSpinVel'][3]) -
        (S['wheelSpinVel'][0]+S['wheelSpinVel'][1]) > 5):
        R['accel']-= .2
+
+    # Clamp accel to valid range
+    R['accel'] = clip(R['accel'], 0, 1)
 
     # Automatic Transmission with hysteresis to prevent gear flickering
     # Up-shift thresholds / Down-shift thresholds
