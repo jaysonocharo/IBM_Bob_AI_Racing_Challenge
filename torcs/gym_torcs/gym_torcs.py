@@ -13,7 +13,7 @@ import time
 class TorcsEnv:
     terminal_judge_start = 500  # Speed limit is applied after this step
     termination_limit_progress = 5  # [km/h], episode terminates if car is running slower than this limit
-    default_speed = 50
+    default_speed = 150
 
     initial_reset = True
 
@@ -81,9 +81,6 @@ class TorcsEnv:
                 client.R.d['accel'] += .01
             else:
                 client.R.d['accel'] -= .01
-
-            if client.R.d['accel'] > 0.2:
-                client.R.d['accel'] = 0.2
 
             if client.S.d['speedX'] < 10:
                 client.R.d['accel'] += 1/(client.S.d['speedX']+.1)
