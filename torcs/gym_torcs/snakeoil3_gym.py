@@ -557,19 +557,18 @@ def drive_example(c):
     # Clamp accel to valid range
     R['accel'] = clip(R['accel'], 0, 1)
 
-    # Automatic Transmission with hysteresis to prevent gear flickering
-    # Up-shift thresholds / Down-shift thresholds
-    up   = [0,  60, 100, 140, 190, 220]
-    down = [0,  0,   50,  85, 125, 170]
-    g = R['gear']
-    if g < 1: g = 1
-    # Shift up
-    if g < 6 and S['speedX'] > up[g]:
-        g += 1
-    # Shift down
-    elif g > 1 and S['speedX'] < down[g]:
-        g -= 1
-    R['gear'] = g
+    # Automatic Transmission
+    R['gear'] = 1
+    if S['speedX'] > 60:
+        R['gear'] = 2
+    if S['speedX'] > 100:
+        R['gear'] = 3
+    if S['speedX'] > 140:
+        R['gear'] = 4
+    if S['speedX'] > 190:
+        R['gear'] = 5
+    if S['speedX'] > 220:
+        R['gear'] = 6
     return
 
 # ================ MAIN ================
