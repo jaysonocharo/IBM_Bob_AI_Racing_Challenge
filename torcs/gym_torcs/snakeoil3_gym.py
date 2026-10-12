@@ -557,18 +557,15 @@ def drive_example(c):
     # Clamp accel to valid range
     R['accel'] = clip(R['accel'], 0, 1)
 
-    # Automatic Transmission
-    R['gear'] = 1
-    if S['speedX'] > 60:
-        R['gear'] = 2
-    if S['speedX'] > 100:
-        R['gear'] = 3
-    if S['speedX'] > 140:
-        R['gear'] = 4
-    if S['speedX'] > 190:
-        R['gear'] = 5
-    if S['speedX'] > 220:
-        R['gear'] = 6
+    # Automatic Transmission - RPM based (prevents flickering)
+    gear = R['gear']
+    if gear < 1:
+        gear = 1
+    if S['rpm'] > 8000 and gear < 6:
+        gear += 1
+    elif S['rpm'] < 3000 and gear > 1:
+        gear -= 1
+    R['gear'] = gear
     return
 
 # ================ MAIN ================
