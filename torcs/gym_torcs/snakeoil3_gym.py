@@ -537,9 +537,12 @@ def drive_example(c):
     target_speed=300
 
     # Steer To Corner
-    R['steer']= S['angle']*15 / PI
+    R['steer'] = S['angle'] * 15 / PI
     # Steer To Center
-    R['steer']-= S['trackPos']*.10
+    R['steer'] -= S['trackPos'] * 0.10
+    # Emergency correction when car is near the edge (|trackPos| > 0.7)
+    if abs(S['trackPos']) > 0.7:
+        R['steer'] -= S['trackPos'] * 0.20
 
     # Throttle Control
     if S['speedX'] < target_speed - (R['steer']*50):
